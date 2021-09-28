@@ -8,8 +8,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 
-public class SmtpMessageSender {
+public class SmtpMessageSender implements EmailNotification {
 
+    @Override
     public void sendNotification(String subject, String body, String address){
         Properties properties = System.getProperties();
         //mail server is expected to be on localhost, so whatever server this application is deployed to,
