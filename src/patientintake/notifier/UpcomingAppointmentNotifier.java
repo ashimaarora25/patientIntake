@@ -15,7 +15,7 @@ public class UpcomingAppointmentNotifier {
     }
 
     public void run(){
-        for(PatientAppointment appt: getTomorrowAppointments()){
+        for(PatientAppointment appt: calendar.getTomorrowAppointments()){
             SmtpMessageSender notifier = new SmtpMessageSender();
             String email = appt.getLastName().toLowerCase()+ appt.getFirstName().toLowerCase() + appt.getDoctor().getName();
             System.out.println("Sending with body: "+buildMessageBody(appt));
