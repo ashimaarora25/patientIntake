@@ -1,8 +1,7 @@
 package patientintake;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +34,7 @@ class ClinicCalendarShould {
 
     void returnTrueForHasAppointmentIfAppointmentExists(){
         calendar.addAppointment("Jim","Weaver","avery","09/01/2019 2:30 pm");
-        assertTrue(calendar.hasAppointment(LocalDate.of(2019,9,01)));
+        assertTrue(calendar.hasAppointment(LocalDate.of(2019,9,1)));
     }
 
     @Test
@@ -44,15 +43,50 @@ class ClinicCalendarShould {
     }
 
 
-    @Test
-    void returnCurrentDayAppointments(){
-        calendar.addAppointment("Jim","Weaver","avery","09/08/2021 2:30 pm");
-        calendar.addAppointment("Jim","Weaver","avery","09/08/2021 3:30 pm");
-        calendar.addAppointment("Jim","Weaver","avery","09/12/2021 2:30 pm");
-        assertEquals(2,calendar.getTodayAppointment().size());
-        //assertIterableEquals(calendar.getTodayAppointment(), calendar.getAppointments());
+    @Nested
+    @DisplayName("return Appointments correctly")
+    class AppointmentsForDay {
+        @Test
+        @DisplayName("for today")
+        void returnCurrentDayAppointments() {
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/28/2021 2:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/28/2021 3:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/12/2021 2:30 pm");
+            assertEquals(2, calendar.getTodayAppointment().size());
+            //assertIterableEquals(calendar.getTodayAppointment(), calendar.getAppointments());
+        }
+
+        @Test
+        @DisplayName("for tomorrow")
+        void returnTomorrowsAppointments() {
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/29/2021 2:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/29/2021 3:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/12/2021 2:30 pm");
+            assertEquals(2, calendar.getTomorrowAppointments().size());
+            //assertIterableEquals(calendar.getTodayAppointment(), calendar.getAppointments());
+        }
     }
 
+    @Nested
+    @DisplayName("return Upcoming Appointments")
+    class UpcomingAppointments{
 
+        @Test
+        @DisplayName("when there are no future appointments")
+        void whenThereAreNone(){
+            List<PatientAppointment> appointments = calendar.getUpcomingAppointments();
+            assertEquals(0,calendar.getUpcomingAppointments().size());
+        }
+
+        @Test
+        @DisplayName("when there is a combination of past and future appointments")
+        void whenThereAreSomePastAndFutureAppointments(){
+            calendar.addAppointment("Jim", "Weaver", "avery", "07/09/2021 2:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "07/09/2021 3:30 pm");
+            calendar.addAppointment("Jim", "Weaver", "avery", "09/30/2021 2:30 pm");
+            assertEquals(1,calendar.getUpcomingAppointments().size());
+        }
+
+    }
 
 }

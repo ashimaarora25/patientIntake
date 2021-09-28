@@ -47,6 +47,7 @@ public class ClinicCalendar {
     }
 
 
-
-
+    public List<PatientAppointment> getUpcomingAppointments() {
+        return appointments.stream().filter(appt->appt.getAppointmentDateTime().toLocalDate().isAfter(today)).collect(Collectors.toList());
+    }
 }
